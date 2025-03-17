@@ -1,3 +1,6 @@
+# File: basic stepup code.py
+# Purpose: Create initial setup code for Alchemy API integration with Web3.py
+
 import os
 import sys
 import time
