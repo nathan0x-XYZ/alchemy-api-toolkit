@@ -1,3 +1,6 @@
+# File: retry_with_backoff.py
+# Purpose: Implement exponential backoff retry mechanism for API resilience
+
 import time
 import random
 import requests
