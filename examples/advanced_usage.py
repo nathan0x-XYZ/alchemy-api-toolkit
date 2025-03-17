@@ -51,6 +51,11 @@ def rate_limited_api_call(func, *args, **kwargs):
 async def main():
     """Main function demonstrating advanced toolkit usage"""
     
+    # Check if API key exists
+    if not ALCHEMY_API_KEY:
+        logger.error("Alchemy API key not found. Please set ALCHEMY_API_KEY in .env file")
+        return
+    
     # Step 1: Test network connection
     logger.info("Testing connection to Alchemy API...")
     connection_status = test_alchemy_connection()

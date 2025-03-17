@@ -36,6 +36,10 @@ def main():
     
     # Step 1: Validate API key
     logger.info("Validating API key...")
+    if not ALCHEMY_API_KEY:
+        logger.error("Alchemy API key not found. Please set ALCHEMY_API_KEY in .env file")
+        return
+        
     if not is_valid_alchemy_key(ALCHEMY_API_KEY):
         logger.error("Invalid Alchemy API key format")
         return
