@@ -1,3 +1,6 @@
+<!-- File: alchemy-debug-guide-en.md -->
+<!-- Purpose: Add comprehensive debugging guide for Alchemy API (English version) -->
+
 # Alchemy API Debug Guide
 
 ![Alchemy Logo](https://www.alchemy.com/images/alchemylogo.svg)
