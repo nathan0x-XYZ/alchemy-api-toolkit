@@ -1,242 +1,189 @@
-# Alchemy API Toolkit
+<div align="center">
 
-![Alchemy Logo](https://www.alchemy.com/images/alchemylogo.svg)
+# Alchemy API Toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
-[![Alchemy API](https://img.shields.io/badge/Alchemy-API-8A2BE2)](https://docs.alchemy.com/)
-[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Alchemy API](https://img.shields.io/badge/Alchemy-API-blue)](https://www.alchemy.com/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-> A comprehensive toolkit for working with Alchemy APIs, including debugging guides, error handling examples, and production-ready code samples.
+A comprehensive toolkit for working with Alchemy's blockchain APIs, featuring robust error handling, rate limiting, and utility functions.
+</div>
 
 <details>
-<summary>📖 Table of Contents</summary>
+<summary>Table of Contents</summary>
 
 - [Overview](#overview)
 - [Why Use This Toolkit?](#why-use-this-toolkit)
-- [Contents](#contents)
-- [Features](#features)
-- [Use Cases](#use-cases)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
 - [Example Usage](#example-usage)
   - [API Key Validation](#api-key-validation)
   - [Retry with Backoff](#retry-with-backoff)
   - [NFT Data Retrieval](#nft-data-retrieval)
 - [Architecture](#architecture)
-- [Documentation](#documentation)
 - [Common Issues & Solutions](#common-issues--solutions)
 - [Contributing](#contributing)
 - [Resources](#resources)
 - [License](#license)
+- [File Structure](#file-structure)
 
 </details>
 
 ## Overview
 
-This repository contains a collection of tools, guides, and code examples for effectively working with Alchemy's blockchain APIs. It is designed to help developers troubleshoot common issues, implement best practices, and build robust applications on top of Alchemy's infrastructure.
+Alchemy API Toolkit is a comprehensive toolkit designed to simplify interactions with Alchemy blockchain APIs. It provides a robust set of tools for handling common API challenges such as error handling, rate limiting, and retry logic.
 
 ## Why Use This Toolkit?
 
-Working with blockchain APIs presents unique challenges:
+When working with blockchain APIs, developers often face several common challenges:
 
-- **Rate limiting**: Blockchain APIs often have strict rate limits
-- **Reliability**: Network congestion can cause intermittent failures
-- **Complex data structures**: NFT metadata and blockchain data can be complex
-- **Error handling**: Different error types require different handling strategies
+- Handling API rate limits and throttling
+- Implementing reliable error handling and retry logic
+- Parsing and validating complex blockchain data
+- Optimizing API requests to reduce costs and latency
 
-This toolkit provides **production-tested solutions** to these challenges, saving you hours of debugging and development time.
+This toolkit addresses these challenges by providing tested solutions, allowing you to focus on building your blockchain application rather than dealing with the complexities of the underlying APIs.
 
-## Contents
-
-- [**Debug Guide**](./alchemy-debug-guide-en.md) - Comprehensive guide for troubleshooting Alchemy API integration issues
-- **Code Examples**:
-  - [API Key Validation](./validate_api_key.py) - Validate Alchemy API keys and check permissions
-  - [Network Connection Testing](./test_network_connection.py) - Test connectivity to Alchemy endpoints
-  - [Rate Limiting](./rate_limiter.py) - Implement rate limiting to avoid API throttling
-  - [Retry with Backoff](./retry_with_backoff.py) - Exponential backoff strategy for handling rate limits
-  - [Webhook Validation](./webhook_validator.py) - Validate and process Alchemy webhooks
-  - [NFT Data Retrieval](./fetch_nft_examples.py) - Fetch NFT data with pagination and error handling
-  - [Complete Error Handling](./alchemy_api_debug.py) - Comprehensive error handling for all API calls
-
-## Features
-
-- ✅ **Production-ready code examples** - Copy and paste into your projects
-- ✅ **Comprehensive error handling** - Catch and handle all possible API errors
-- ✅ **Rate limit avoidance strategies** - Prevent hitting API rate limits
-- ✅ **Webhook integration examples** - Process real-time blockchain events
-- ✅ **NFT API implementation patterns** - Handle NFT data with best practices
-- ✅ **Detailed debugging guide** - Troubleshoot common issues quickly
-
-## Use Cases
-
-This toolkit is designed for developers who are:
-
-- Building dApps that need reliable blockchain data access
-- Implementing NFT functionality in their applications
-- Setting up monitoring and alerting for blockchain events
-- Troubleshooting API integration issues
-- Learning best practices for working with blockchain APIs
-
-## Getting Started
-
-### Prerequisites
+## Prerequisites
 
 - Python 3.7 or higher
-- An Alchemy API key ([Get one here](https://dashboard.alchemy.com/))
-- Basic understanding of blockchain concepts
+- Alchemy API key ([Register here](https://www.alchemy.com/))
+- The following Python libraries:
+  - web3
+  - requests
+  - python-dotenv
 
-### Installation
+## Installation
 
 1. Clone this repository:
-   ```bash
-   git clone https://github.com/nathan0x-XYZ/alchemy-api-toolkit.git
-   cd alchemy-api-toolkit
-   ```
 
-2. Create a `.env` file and add your Alchemy API key:
-   ```
-   ALCHEMY_API_KEY=your_alchemy_api_key
-   ```
+```bash
+git clone https://github.com/nathan0x-XYZ/alchemy-api-toolkit.git
+cd alchemy-api-toolkit
+```
 
-3. Install required dependencies:
-   ```bash
-   pip install web3 requests python-dotenv
-   ```
+2. Install dependencies:
 
-4. Run any of the example scripts:
-   ```bash
-   python alchemy_api_debug.py
-   ```
+```bash
+pip install -r requirements.txt
+```
+
+3. Create a `.env` file and add your Alchemy API key:
+
+```
+ALCHEMY_API_KEY=your_api_key_here
+```
 
 ## Example Usage
 
 ### API Key Validation
 
 ```python
-from validate_api_key import validate_alchemy_key
+from validate_api_key import is_valid_alchemy_key
+import os
+from dotenv import load_dotenv
 
-# Check if your API key is valid and has the required permissions
-result = validate_alchemy_key(
-    api_key="your_alchemy_api_key",
-    required_permissions=["nft_read", "eth_read"]
-)
+# Load environment variables
+load_dotenv()
+api_key = os.getenv('ALCHEMY_API_KEY')
 
-if result["valid"]:
-    print(f"API key is valid with permissions: {result['permissions']}")
+if not is_valid_alchemy_key(api_key):
+    print("Invalid API key format! Please check your .env file.")
 else:
-    print(f"API key validation failed: {result['error']}")
+    print("API key format is valid.")
 ```
 
 ### Retry with Backoff
 
 ```python
 from retry_with_backoff import retry_with_backoff
+import requests
 
-@retry_with_backoff(max_retries=3, backoff_factor=1.5)
-def get_eth_balance(address):
-    # This function will automatically retry with exponential backoff
-    # if it raises an exception
-    response = requests.get(f"{ALCHEMY_API_URL}/getBalance", params={"address": address})
-    response.raise_for_status()
-    return response.json()
+@retry_with_backoff(max_retries=3, backoff_factor=2)
+def fetch_eth_price():
+    url = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()  # This will raise an exception on HTTP errors
+    return response.json()["ethereum"]["usd"]
+
+# Using the retry decorator
+try:
+    eth_price = fetch_eth_price()
+    print(f"ETH price: ${eth_price}")
+except Exception as e:
+    print(f"Could not fetch ETH price: {e}")
 ```
 
 ### NFT Data Retrieval
 
 ```python
-from fetch_nft_examples import get_nfts_for_owner
+from fetch_nft_examples import get_nfts_for_owner, get_nft_metadata
 
-# Get all NFTs owned by an address with pagination handling
-nfts = get_nfts_for_owner(
-    owner_address="0x123...",
-    page_size=100,
-    max_pages=None,  # Fetch all pages
-    include_spam=False
-)
+# Get NFTs owned by an address
+owner_address = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"  # Vitalik's address
+result = get_nfts_for_owner(owner_address, page_size=5, max_pages=1)
 
-print(f"Found {nfts['total']} NFTs for address {nfts['owner']}")
-for nft in nfts['nfts']:
-    print(f"NFT: {nft['name']} (ID: {nft['tokenId']})")
+if result["success"]:
+    print(f"Found {result['total']} NFTs")
+    
+    # If there are NFTs, get metadata for the first one
+    if result["nfts"]:
+        nft = result["nfts"][0]
+        contract_address = nft.get("contract", {}).get("address")
+        token_id = nft.get("id", {}).get("tokenId")
+        
+        if contract_address and token_id:
+            metadata_result = get_nft_metadata(contract_address, token_id)
+            if metadata_result["success"]:
+                print(f"NFT name: {metadata_result['metadata'].get('title', 'Unnamed')}")
+else:
+    print(f"Failed to get NFTs: {result.get('error', 'Unknown error')}")
 ```
 
 ## Architecture
 
-This toolkit follows these design principles:
+This toolkit follows a modular design principle, with each component focused on a specific functionality:
 
-```
-┌─────────────────────────────────────┐
-│           Application Layer          │
-│                                     │
-│  ┌─────────────┐    ┌─────────────┐ │
-│  │   Business   │    │    Error    │ │
-│  │    Logic     │    │   Handling  │ │
-│  └─────────────┘    └─────────────┘ │
-│                                     │
-├─────────────────────────────────────┤
-│           Middleware Layer           │
-│                                     │
-│  ┌─────────────┐    ┌─────────────┐ │
-│  │ Rate Limiter │    │ Retry Logic │ │
-│  └─────────────┘    └─────────────┘ │
-│                                     │
-├─────────────────────────────────────┤
-│            Network Layer             │
-│                                     │
-│  ┌─────────────┐    ┌─────────────┐ │
-│  │  API Client  │    │  Validation │ │
-│  └─────────────┘    └─────────────┘ │
-│                                     │
-└─────────────────────────────────────┘
-```
+<div align="center">
+  <img src="https://mermaid.ink/img/pako:eNp1kc1OwzAQhF9l5QsVUvqDlEOlXnIBiUMP3CJfvG2sOnawd1Mq8u7YTlVBwqfZme-bXW8QWCsQMFJlvFKdJd-gNFLhJBWNxkqSbzQZSQPZXpLWWlLnSA_kR_KWWrJjZ7Qk2_eaXKXIkB2oNDRRqUlpZ8jLXlNfNeSdUbQzZGVn6GBLqnRjyVZUWdJGkWu6hpzTVJHvSFvyY9dQcOSNVqQqS6Uj3VJw1Bk7UNiTG7qGYk9uMDWFGxpbCpbsQYcbCi3Vg6ZIrqOxpdhRqA3VZCsKpSZXUhg0uYZCrWkwFNpOk9tRVJpGQ7EzNLaGYjBUa3I7irWh2BsaG0OxMzQOhsZS09hZGgdDY2VpLDWNtaXRGRoHQ-NgaRwsjb2lsR8s_Y_5Oc_-5vkbAAD__5OAXQ" alt="Architecture Diagram" />
+</div>
 
-Each component is designed to be:
-- **Modular**: Use only what you need
-- **Composable**: Combine components as needed
-- **Testable**: Each component can be tested in isolation
-- **Robust**: Comprehensive error handling at each layer
+Key components include:
 
-## Documentation
-
-For detailed information about using the Alchemy API, refer to the [Debug Guide](./alchemy-debug-guide-en.md) included in this repository.
+1. **Core API Tools** - Handle direct interactions with Alchemy APIs
+2. **Error Handling** - Provide robust error catching and diagnostics
+3. **Rate Limiting** - Prevent API throttling and overuse
+4. **Retry Logic** - Implement exponential backoff to handle transient failures
+5. **Data Parsers** - Simplify handling of complex blockchain data
 
 ## Common Issues & Solutions
 
 | Issue | Solution | Code Example |
-|-------|----------|--------------|
-| API Rate Limits | Implement exponential backoff | [retry_with_backoff.py](./retry_with_backoff.py) |
-| Invalid API Key | Validate key before use | [validate_api_key.py](./validate_api_key.py) |
-| Network Errors | Add proper error handling | [alchemy_api_debug.py](./alchemy_api_debug.py) |
-| IPFS Resolution Failures | Use multiple gateways | [fetch_nft_examples.py](./fetch_nft_examples.py) |
-| Large NFT Collections | Implement pagination | [fetch_nft_examples.py](./fetch_nft_examples.py) |
+|------|----------|----------|
+| Invalid API key | Check `.env` file and validate key format | `from validate_api_key import is_valid_alchemy_key` |
+| Request throttling | Implement rate limiting and backoff strategies | `from rate_limiter import RateLimiter` |
+| Network connectivity issues | Use retry mechanisms and check network connection | `from test_network_connection import test_alchemy_connection` |
+| IPFS URI resolution failures | Use multiple IPFS gateways and timeout handling | `from fetch_nft_examples import resolve_ipfs_uri` |
+| Inefficient batch requests | Use batch API endpoints to reduce request count | `from alchemy_api_debug import batch_get_eth_balances` |
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit pull requests or create issues.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Code Style Guidelines
 
-### Code Style
-
-This project follows the [Black](https://github.com/psf/black) code style. Please ensure your contributions are formatted accordingly:
-
-```bash
-pip install black
-black .
-```
+- Use [Black](https://github.com/psf/black) for code formatting
+- Add appropriate docstrings
+- Include unit tests
+- Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/) guidelines
 
 ## Resources
 
-- [Alchemy Documentation](https://docs.alchemy.com/)
-- [Alchemy Dashboard](https://dashboard.alchemy.com/)
-- [Alchemy Discord Community](https://discord.gg/alchemyplatform)
+- [Alchemy API Documentation](https://docs.alchemy.com/)
 - [Web3.py Documentation](https://web3py.readthedocs.io/)
+- [Ethereum Developer Resources](https://ethereum.org/developers/)
 
 ## License
 
@@ -244,12 +191,24 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 The MIT License is a permissive license that allows anyone to use, modify, and distribute this code, even for commercial purposes, as long as the original copyright notice is included.
 
+## File Structure
+
+This toolkit contains the following main components:
+
+| File Name | Description |
+|--------|----------|
+| `fetch_nft_examples.py` | Complete NFT API toolkit with functions for retrieving NFTs, NFT metadata, and NFT transfer history, as well as IPFS URI resolution |
+| `alchemy_api_debug.py` | Alchemy API debugging tools with error handling, retry mechanisms, and batch request capabilities |
+| `retry_with_backoff.py` | Exponential backoff retry mechanism for improved API request reliability and resilience |
+| `rate_limiter.py` | API rate limiting implementation to prevent API throttling |
+| `validate_api_key.py` | API key validation tool using regex pattern matching |
+| `test_network_connection.py` | Network connectivity test utility for Alchemy API endpoints |
+| `webhook_validator.py` | Webhook signature validation for secure callbacks |
+
+Additionally, it includes detailed debugging guides (`alchemy-debug-guide.md` and `alchemy-debug-guide-en.md`) to help you troubleshoot common issues.
+
 ---
 
 <div align="center">
-
-**[⬆ back to top](#alchemy-api-toolkit)**
-
-*Created with ❤️ for the blockchain developer community*
-
+  <a href="#top">Back to Top</a>
 </div>
