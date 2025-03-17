@@ -1,3 +1,6 @@
+# File: alchemy_api_debug.py
+# Purpose: Implement Alchemy API debugging tools with error handling and retry logic
+
 import os
 import time
 import requests
