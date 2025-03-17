@@ -39,7 +39,7 @@ ALCHEMY_API_KEY = os.getenv("ALCHEMY_API_KEY")
 rate_limiter = RateLimiter(max_calls=300, time_frame=60)
 
 # Create a custom retry function with our rate limiter
-@retry_with_backoff(max_retries=5, backoff_factor=2)
+@retry_with_backoff(max_retries=5, base_delay=2)
 def rate_limited_api_call(func, *args, **kwargs):
     """Make an API call with rate limiting and retry logic"""
     # Wait if we're exceeding rate limits
