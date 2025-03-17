@@ -1,3 +1,6 @@
+# File: test_network_connection.py
+# Purpose: Add network connectivity test utility for Alchemy API endpoints
+
 import requests
 import time
 
