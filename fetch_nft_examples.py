@@ -332,44 +332,185 @@ def resolve_ipfs_uri(ipfs_uri, timeout=15):
         logger.error(f"[ERROR] Failed to resolve IPFS URI: {e}")
         return None
 
+def get_nft_transfers(owner_address, page_size=100, max_pages=1):
+    """
+    Get NFT transfer history for an address using alchemy_getAssetTransfers endpoint
+    
+    Args:
+        owner_address (str): The Ethereum address to query
+        page_size (int): Number of transfers to fetch per page
+        max_pages (int): Maximum number of pages to fetch
+        
+    Returns:
+        dict: Result containing transfers and status information
+    """
+    
+    url = f"https://eth-mainnet.g.alchemy.com/v2/{ALCHEMY_API_KEY}"
+    
+    all_transfers = []
+    page_count = 0
+    page_key = None
+    
+    try:
+        while page_count < max_pages:
+            page_count += 1
+            
+            logger.info(f"Fetching NFT transfers for {owner_address} (page {page_count}/{max_pages})")
+            
+            # Prepare request payload
+            payload = {
+                "id": 1,
+                "jsonrpc": "2.0",
+                "method": "alchemy_getAssetTransfers",
+                "params": [
+                    {
+                        "fromBlock": "0x0",
+                        "toBlock": "latest",
+                        "category": ["ERC721", "ERC1155"],
+                        "withMetadata": True,
+                        "excludeZeroValue": True,
+                        "maxCount": hex(page_size)[2:],
+                        "fromAddress": owner_address
+                    }
+                ]
+            }
+            
+            # Add pageKey if we have one
+            if page_key:
+                payload["params"][0]["pageKey"] = page_key
+            
+            # Make the request
+            response = requests.post(url, json=payload, timeout=30)
+            response.raise_for_status()
+            
+            result = response.json()
+            
+            if "error" in result:
+                logger.error(f"API Error: {result['error']['message']}")
+                return {
+                    "success": False,
+                    "error": result["error"]["message"],
+                    "transfers": all_transfers,
+                    "owner": owner_address,
+                    "pages_fetched": page_count
+                }
+            
+            # Extract transfers
+            transfers = result["result"]["transfers"]
+            all_transfers.extend(transfers)
+            
+            # Check if we have a next page
+            if "pageKey" in result["result"]:
+                page_key = result["result"]["pageKey"]
+            else:
+                # No more pages
+                break
+            
+            # Add a small delay to avoid rate limiting
+            time.sleep(0.5)
+        
+        logger.info(f"Successfully fetched {len(all_transfers)} NFT transfers for {owner_address}")
+        
+        return {
+            "success": True,
+            "transfers": all_transfers,
+            "total": len(all_transfers),
+            "owner": owner_address,
+            "pages_fetched": page_count
+        }
+        
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Request error: {str(e)}")
+        return {
+            "success": False,
+            "error": str(e),
+            "transfers": all_transfers,
+            "owner": owner_address,
+            "pages_fetched": page_count
+        }
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        return {
+            "success": False,
+            "error": str(e),
+            "transfers": all_transfers,
+            "owner": owner_address,
+            "pages_fetched": page_count
+        }
+
 # Example usage
 def nft_demo():
     """Demo of NFT API usage with error handling"""
-    # Example: Get NFTs for a known address
-    owner_address = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"  # Vitalik's address
-    print(f"\n=== Getting NFTs for {owner_address} ===")
-    result = get_nfts_for_owner(owner_address, page_size=5, max_pages=1)
-    
-    if result["success"]:
-        print(f"Successfully retrieved {result['total']} NFTs")
+    try:
+        # Example address (Vitalik's address)
+        owner_address = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
         
-        # If we have NFTs, get metadata for the first one
-        if result["nfts"]:
-            nft = result["nfts"][0]
-            contract_address = nft.get("contract", {}).get("address")
-            token_id = nft.get("id", {}).get("tokenId")
+        # 1. Get NFTs owned by an address
+        logger.info("\n=== Fetching NFTs for owner ===")
+        nfts_result = get_nfts_for_owner(
+            owner_address=owner_address,
+            page_size=5,  # Small page size for demo
+            max_pages=1   # Only fetch one page for demo
+        )
+        
+        if nfts_result["success"]:
+            logger.info(f"Successfully fetched {nfts_result['total']} NFTs")
             
-            if contract_address and token_id:
-                print(f"\n=== Getting metadata for NFT {contract_address}/{token_id} ===")
-                metadata_result = get_nft_metadata(contract_address, token_id)
-                
-                if metadata_result["success"]:
-                    print("Successfully retrieved NFT metadata")
-                    
-                    # Check if there's an IPFS URI to resolve
-                    token_uri = metadata_result["metadata"].get("tokenUri", {}).get("raw")
-                    if token_uri and token_uri.startswith("ipfs://"):
-                        print(f"\n=== Resolving IPFS URI: {token_uri} ===")
-                        ipfs_result = resolve_ipfs_uri(token_uri)
-                        
-                        if ipfs_result:
-                            print("Successfully resolved IPFS URI")
-                        else:
-                            print("Failed to resolve IPFS URI")
-                else:
-                    print(f"Failed to get NFT metadata: {metadata_result.get('error')}")
-    else:
-        print(f"Failed to get NFTs: {result.get('error')}")
+            # Show a sample of the NFTs
+            if nfts_result["nfts"]:
+                sample_nft = nfts_result["nfts"][0]
+                logger.info(f"Sample NFT: {sample_nft.get('title', 'Unnamed NFT')}")
+                logger.info(f"Contract: {sample_nft.get('contract', {}).get('address', 'Unknown')}")
+                logger.info(f"Token ID: {sample_nft.get('id', {}).get('tokenId', 'Unknown')}")
+        else:
+            logger.error(f"Failed to fetch NFTs: {nfts_result.get('error', 'Unknown error')}")
+        
+        # 2. Get NFT transfers for an address
+        logger.info("\n=== Fetching NFT transfers for owner ===")
+        transfers_result = get_nft_transfers(
+            owner_address=owner_address,
+            page_size=5,  # Small page size for demo
+            max_pages=1   # Only fetch one page for demo
+        )
+        
+        if transfers_result["success"]:
+            logger.info(f"Successfully fetched {transfers_result['total']} transfers")
+            
+            # Show a sample of the transfers
+            if transfers_result["transfers"]:
+                sample_transfer = transfers_result["transfers"][0]
+                logger.info(f"Sample Transfer: {sample_transfer.get('asset', 'Unknown asset')}")
+                logger.info(f"From: {sample_transfer.get('from', 'Unknown')}")
+                logger.info(f"To: {sample_transfer.get('to', 'Unknown')}")
+                logger.info(f"Hash: {sample_transfer.get('hash', 'Unknown')}")
+        else:
+            logger.error(f"Failed to fetch transfers: {transfers_result.get('error', 'Unknown error')}")
+        
+        # 3. Get NFT metadata
+        # Use a known NFT for the demo
+        logger.info("\n=== Fetching NFT metadata ===")
+        contract_address = "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d"  # BAYC
+        token_id = "1"
+        
+        metadata_result = get_nft_metadata(contract_address, token_id)
+        
+        if metadata_result["success"]:
+            logger.info(f"Successfully fetched metadata for {contract_address}/{token_id}")
+            metadata = metadata_result["metadata"]
+            
+            logger.info(f"Name: {metadata.get('contract', {}).get('name', 'Unknown')}")
+            logger.info(f"Symbol: {metadata.get('contract', {}).get('symbol', 'Unknown')}")
+            logger.info(f"Token Type: {metadata.get('contract', {}).get('tokenType', 'Unknown')}")
+            
+            if "metadata" in metadata and metadata["metadata"]:
+                nft_metadata = metadata["metadata"]
+                logger.info(f"Title: {nft_metadata.get('name', 'Unnamed')}")
+                logger.info(f"Description: {nft_metadata.get('description', 'No description')[:50]}...")
+        else:
+            logger.error(f"Failed to fetch metadata: {metadata_result.get('error', 'Unknown error')}")
+            
+    except Exception as e:
+        logger.error(f"Demo failed with error: {str(e)}")
 
 if __name__ == "__main__":
     nft_demo()
