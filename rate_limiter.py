@@ -55,6 +55,34 @@ class RateLimiter:
             now = time.time()
             oldest_call = min(self.calls)
             return max(0, self.time_frame - (now - oldest_call))
+    
+    def wait_if_needed(self):
+        """
+        Wait if rate limit is reached before making a call
+        
+        This method will block until a call can be made without
+        exceeding the rate limit.
+        
+        Returns:
+            float: The time waited in seconds
+        """
+        wait_time = self.wait_time()
+        if wait_time > 0:
+            time.sleep(wait_time)
+            # After waiting, register the call
+            with self.lock:
+                now = time.time()
+                self.calls = [t for t in self.calls if now - t < self.time_frame]
+                self.calls.append(now)
+            return wait_time
+        
+        # If we can make a call without waiting, register it
+        if self.can_call():
+            return 0
+        
+        # If we reach here, something changed between wait_time and can_call
+        # Try again recursively (should be rare)
+        return self.wait_if_needed()
 
 # Example usage
 if __name__ == "__main__":
@@ -74,4 +102,14 @@ if __name__ == "__main__":
                 print(f"Call {i+1}: API call made after waiting")
         
         # Simulate some processing time
+        time.sleep(0.5)
+    
+    # Example of using wait_if_needed
+    print("\nExample of using wait_if_needed:")
+    for i in range(5):
+        wait_time = limiter.wait_if_needed()
+        if wait_time > 0:
+            print(f"Call {i+1}: Waited {wait_time:.2f} seconds before making API call")
+        else:
+            print(f"Call {i+1}: API call made without waiting")
         time.sleep(0.5)
