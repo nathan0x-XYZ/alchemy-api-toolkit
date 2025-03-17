@@ -372,7 +372,7 @@ def get_nft_transfers(owner_address, page_size=100, max_pages=1):
                         "category": ["ERC721", "ERC1155"],
                         "withMetadata": True,
                         "excludeZeroValue": True,
-                        "maxCount": hex(page_size)[2:],
+                        "maxCount": f"0x{hex(page_size)[2:]}",
                         "fromAddress": owner_address
                     }
                 ]
