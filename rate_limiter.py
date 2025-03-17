@@ -1,3 +1,6 @@
+# File: rate_limiter.py
+# Purpose: Add rate limiting implementation to prevent API throttling
+
 import time
 import threading
 
