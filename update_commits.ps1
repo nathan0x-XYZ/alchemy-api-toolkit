@@ -1,4 +1,4 @@
-# PowerShell script to update commit messages for each file
+# PowerShell script to add descriptive commits for each file
 
 # Ensure we're in the correct directory
 Set-Location -Path "c:\Users\ewuxnat\code\Alchemy"
@@ -51,7 +51,7 @@ $files = @(
     }
 )
 
-# Create a new commit for each file with a descriptive message
+# Make a small change to each file and create a new commit with a descriptive message
 foreach ($item in $files) {
     $file = $item.file
     $message = $item.message
@@ -59,6 +59,20 @@ foreach ($item in $files) {
     # Check if file exists
     if (Test-Path $file) {
         Write-Host "Creating new commit for $file with descriptive message..."
+        
+        # Make a small change to the file (add a comment at the top)
+        $content = Get-Content $file
+        $fileExtension = [System.IO.Path]::GetExtension($file)
+        
+        if ($fileExtension -eq ".py") {
+            $newContent = "# File: $file`n# Purpose: $message`n`n" + ($content -join "`n")
+        } elseif ($fileExtension -eq ".md") {
+            $newContent = "<!-- File: $file -->`n<!-- Purpose: $message -->`n`n" + ($content -join "`n")
+        } else {
+            $newContent = "# File: $file`n# Purpose: $message`n`n" + ($content -join "`n")
+        }
+        
+        Set-Content -Path $file -Value $newContent
         
         # Add the file and create a new commit
         git add $file
