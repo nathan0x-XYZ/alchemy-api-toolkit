@@ -1,3 +1,6 @@
+<!-- File: alchemy-debug-guide.md -->
+<!-- Purpose: Add comprehensive debugging guide for Alchemy API (Chinese version) -->
+
 # Alchemy API Debug 指南
 
 ## 目錄
