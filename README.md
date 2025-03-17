@@ -33,7 +33,7 @@ This repository contains a collection of tools, guides, and code examples for ef
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/alchemy-api-toolkit.git
+   git clone https://github.com/nathan0x-XYZ/alchemy-api-toolkit.git
    cd alchemy-api-toolkit
    ```
 
