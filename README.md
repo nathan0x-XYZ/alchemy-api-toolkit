@@ -56,7 +56,7 @@ Alchemy API Toolkit is a comprehensive solution designed to streamline interacti
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/alchemy-api-toolkit.git
+git clone https://github.com/nathan0x-XYZ/alchemy-api-toolkit.git
 cd alchemy-api-toolkit
 
 # Install dependencies
@@ -231,6 +231,6 @@ For detailed API documentation, see our [API Reference](docs/api-reference.md).
 
 <div align="center">
   <a href="#top">Back to Top</a> | 
-  <a href="https://github.com/your-username/alchemy-api-toolkit/issues/new">Report Issue</a> | 
-  <a href="https://github.com/your-username/alchemy-api-toolkit/discussions">Discussions</a>
+  <a href="https://github.com/nathan0x-XYZ/alchemy-api-toolkit/issues/new">Report Issue</a> | 
+  <a href="https://github.com/nathan0x-XYZ/alchemy-api-toolkit/discussions">Discussions</a>
 </div>
