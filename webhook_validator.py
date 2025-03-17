@@ -1,3 +1,6 @@
+# File: webhook_validator.py
+# Purpose: Implement webhook signature validation for secure callbacks
+
 from flask import Flask, request, jsonify
 import hmac
 import hashlib
