@@ -205,6 +205,8 @@ This toolkit contains the following main components:
 | `test_network_connection.py` | Network connectivity test utility for Alchemy API endpoints |
 | `webhook_validator.py` | Webhook signature validation for secure callbacks |
 
+For a more detailed description of each file and its functionality, please see the [File Descriptions](update_file_descriptions.md) document.
+
 Additionally, it includes detailed debugging guides (`alchemy-debug-guide.md` and `alchemy-debug-guide-en.md`) to help you troubleshoot common issues.
 
 ---
