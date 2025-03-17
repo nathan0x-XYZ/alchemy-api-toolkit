@@ -136,9 +136,21 @@ results = process_addresses_in_parallel(addresses, batch_size=5)
 
 This toolkit follows a modular architecture designed for flexibility and maintainability:
 
-<div align="center">
-  <img src="https://mermaid.ink/svg/pako:eNp1kc1OwzAQhF9l5QsVUvqDlEOlXnIBiUMP3CJfvG2sOnawd1Mq8u7YTlVBwqfZme-bXW8QWCsQMFJlvFKdJd-gNFLhJBWNxkqSbzQZSQPZXpLWWlLnSA_kR_KWWrJjZ7Qk2_eaXKXIkB2oNDRRqUlpZ8jLXlNfNeSdUbQzZGVn6GBLqnRjyVZUWdJGkWu6hpzTVJHvSFvyY9dQcOSNVqQqS6Uj3VJw1Bk7UNiTG7qGYk9uMDWFGxpbCpbsQYcbCi3Vg6ZIrqOxpdhRqA3VZCsKpSZXUhg0uYZCrWkwFNpOk9tRVJpGQ7EzNLaGYjBUa3I7irWh2BsaG0OxMzQOhsZS09hZGgdDY2VpLDWNtaXRGRoHQ-NgaRwsjb2lsR8s_Y_5Oc_-5vkbAAD__5OAXQ" alt="Architecture Diagram" />
-</div>
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Alchemy API Toolkit                     │
+├───────────────┬───────────────┬───────────────┬─────────────┤
+│ API Interface │  Reliability  │ Data Process. │   Utility   │
+│     Layer     │     Layer     │     Layer     │    Layer    │
+├───────────────┼───────────────┼───────────────┼─────────────┤
+│ • Alchemy     │ • Rate        │ • Data        │ • Helper    │
+│   Endpoints   │   Limiting    │   Parsers     │   Functions │
+│ • Request     │ • Retry       │ • Formatters  │ • Common    │
+│   Formatting  │   Logic       │ • Validators  │   Operations│
+│ • Response    │ • Error       │ • Type        │ • Logging   │
+│   Handling    │   Handling    │   Conversion  │   Utilities │
+└───────────────┴───────────────┴───────────────┴─────────────┘
+```
 
 The toolkit is organized around these core components:
 
