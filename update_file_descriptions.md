@@ -85,6 +85,29 @@ This document provides detailed descriptions of each file in the Alchemy API Too
 - Explains the purpose and functionality of each file
 - Helps users understand how to use each file and its role in the toolkit
 
+## Examples
+
+### `examples/basic_usage.py`
+**Purpose**: Simple examples showing the core functionality of the toolkit
+- Demonstrates API key validation
+- Shows how to get ETH balance with error handling
+- Provides examples of retrieving NFTs and metadata
+- Serves as a starting point for new users
+
+### `examples/advanced_usage.py`
+**Purpose**: Advanced examples demonstrating more complex features
+- Shows how to use rate limiting with the toolkit
+- Demonstrates batch processing of ETH balances
+- Includes examples of NFT transfer retrieval
+- Shows how to resolve IPFS URIs
+
+### `examples/batch_processing.py`
+**Purpose**: Example of efficiently processing large amounts of data
+- Demonstrates parallel processing with ThreadPoolExecutor
+- Shows how to handle rate limiting in parallel operations
+- Provides patterns for processing large datasets
+- Includes error handling for batch operations
+
 ## Configuration Files
 
 ### `.env`

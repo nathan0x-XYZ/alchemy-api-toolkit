@@ -57,24 +57,23 @@ This toolkit addresses these challenges by providing tested solutions, allowing 
 
 ## Installation
 
-1. Clone this repository:
-
+1. Clone the repository:
 ```bash
-git clone https://github.com/nathan0x-XYZ/alchemy-api-toolkit.git
+git clone https://github.com/your-username/alchemy-api-toolkit.git
 cd alchemy-api-toolkit
 ```
 
-2. Install dependencies:
-
+2. Install the required dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Create a `.env` file and add your Alchemy API key:
+3. Create a `.env` file in the project root and add your Alchemy API key:
+```
+ALCHEMY_API_KEY=your_alchemy_api_key_here
+```
 
-```
-ALCHEMY_API_KEY=your_api_key_here
-```
+4. You're ready to use the toolkit!
 
 ## Example Usage
 
@@ -208,6 +207,23 @@ This toolkit contains the following main components:
 For a more detailed description of each file and its functionality, please see the [File Descriptions](update_file_descriptions.md) document.
 
 Additionally, it includes detailed debugging guides (`alchemy-debug-guide.md` and `alchemy-debug-guide-en.md`) to help you troubleshoot common issues.
+
+### Examples
+
+The `examples` directory contains ready-to-use examples demonstrating various aspects of the toolkit:
+
+| Example File | Description |
+|--------|----------|
+| `basic_usage.py` | Simple examples showing the core functionality of the toolkit |
+| `advanced_usage.py` | Advanced examples demonstrating rate limiting, batch processing, and more |
+| `batch_processing.py` | Example of efficiently processing large amounts of data with parallel execution |
+
+To run any example:
+
+```bash
+cd examples
+python basic_usage.py
+```
 
 ---
 
