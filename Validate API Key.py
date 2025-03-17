@@ -1,3 +1,6 @@
+# File: Validate API Key.py
+# Purpose: Add comprehensive API key validator with logging capabilities
+
 import re
 import os
 import logging
