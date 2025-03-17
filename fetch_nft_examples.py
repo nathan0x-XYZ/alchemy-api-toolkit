@@ -1,3 +1,6 @@
+# File: fetch_nft_examples.py
+# Purpose: Consolidate NFT functionality into a single comprehensive file
+
 import os
 import time
 import logging
