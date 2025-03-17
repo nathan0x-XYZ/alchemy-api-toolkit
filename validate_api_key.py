@@ -1,3 +1,6 @@
+# File: validate_api_key.py
+# Purpose: Add API key validation utility with regex pattern matching
+
 import re
 
 def is_valid_alchemy_key(api_key):
